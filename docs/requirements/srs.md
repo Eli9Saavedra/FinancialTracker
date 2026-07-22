@@ -195,4 +195,37 @@ The following are not required for FinancialTracker v1:
 The primary user workflow for FinancialTracker v1 is:
 
 ```text
-Add income → Add expenses → Create budgets → View financial summaries
+Add income -> Add expenses -> Create budgets -> View financial summaries
+```
+
+Supporting workflows include:
+
+```text
+Create category -> Assign category to entry -> Review category spending
+```
+
+```text
+Update financial record -> Recalculate summary -> Review updated monthly picture
+```
+
+---
+
+## ✅ Acceptance Summary
+
+FinancialTracker v1 will satisfy this SRS if the completed application can:
+
+* Record and manage income entries
+* Record and manage expense entries
+* Record and manage budget entries
+* Record and manage categories
+* Display useful monthly financial summaries
+* Persist data locally through the backend and database
+* Support the primary v1 user workflow in a reliable and understandable way
+
+---
+
+## 📝 Notes
+
+This SRS provides the requirements baseline for FinancialTracker v1.
+
+Detailed object definitions, database schema design, API endpoint design, architecture decisions, and testing strategy are documented in related design and testing documents.

@@ -175,6 +175,75 @@ FinancialTracker v1 uses the following relationships:
 
 ```text
 Categories
-   ├──< Incomes
-   ├──< Expenses
-   └──< Budgets
+   |--< Incomes
+   |--< Expenses
+   `--< Budgets
+```
+
+---
+
+## 📊 Summary Calculation Design
+
+Monthly financial summaries are derived from query results instead of a dedicated summary table in v1.
+
+Summary calculations should include:
+
+* Total income for a selected month
+* Total expenses for a selected month
+* Total budget for a selected month
+* Remaining budget
+* Net balance
+* Spending grouped by category
+
+This design avoids storing duplicate summary data and keeps v1 simpler.
+
+---
+
+## ✅ Indexing Considerations
+
+The following indexes should be considered for v1:
+
+* Primary key index on each table
+* Unique index on `Categories.Name`
+* Index on `Incomes.DateReceived`
+* Index on `Expenses.DateSpent`
+* Index on `Budgets.CategoryId`
+* Composite index on `Budgets(CategoryId, Month, Year)`
+
+These indexes support filtering, grouping, and budget lookup operations.
+
+---
+
+## 🛡️ Data Integrity Considerations
+
+FinancialTracker v1 should enforce:
+
+* Required values for important business fields
+* Positive numeric values for financial amounts
+* Referential integrity between child records and categories
+* Protection against duplicate monthly budgets for the same category
+
+Validation should exist in both the application layer and the database-aware persistence layer where appropriate.
+
+---
+
+## ❌ Excluded Database Features for v1
+
+The database design for v1 does not include:
+
+* User accounts table
+* Roles or permissions tables
+* Audit history tables
+* Recurring transaction tables
+* Bank integration tables
+* Notification tables
+* File attachment tables
+* Cloud synchronization tables
+
+---
+
+## 📝 Notes
+
+This database design document defines the relational data structure for FinancialTracker v1.
+
+Implementation details such as entity classes, Entity Framework Core configurations, migrations, and connection strings will be handled during the implementation phase.

@@ -19,7 +19,7 @@ The project is also intended to provide hands-on experience with real-world soft
 
 ---
 
-## Problem Statement
+## ❗ Problem Statement
 
 Many people need a simple way to understand where their money is coming from, where it is going, and whether they are staying within budget.
 
@@ -124,4 +124,36 @@ FinancialTracker v1 will be considered successful if it can:
 Main v1 workflow:
 
 ```text
-Add income → Add expenses → Create budgets → View financial summaries
+Add income -> Add expenses -> Create budgets -> View financial summaries
+```
+
+---
+
+## 🔒 Assumptions
+
+The following assumptions apply to FinancialTracker v1:
+
+* The application will be used by one local user
+* The user will manually enter financial data
+* Internet access is not required for the core v1 workflow
+* Local development and testing will be performed on a Windows machine
+* SQL Server LocalDB is sufficient for the first version of the project
+
+---
+
+## 🚧 Constraints
+
+The following constraints apply to FinancialTracker v1:
+
+* The project should remain small enough to complete as a learning-focused MVP
+* The first version should avoid unnecessary complexity
+* The application should prioritize clarity, maintainability, and correctness over advanced features
+* The architecture should support future expansion without requiring a complete rewrite
+
+---
+
+## 📝 Notes
+
+This document describes the product direction for FinancialTracker v1.
+
+Detailed functional requirements, system design, API structure, database structure, architecture decisions, and testing strategy will be documented in the remaining project documentation files.

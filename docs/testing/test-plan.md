@@ -198,4 +198,23 @@ Testing for v1 is considered sufficient when:
 The main workflow that must be validated is:
 
 ```text
-Create category → Add income → Add expense → Create budget → View monthly summary
+Create category -> Add income -> Add expense -> Create budget -> View monthly summary
+```
+
+Supporting workflows include:
+
+```text
+Edit record -> Save changes -> Confirm updated summary
+```
+
+```text
+Delete record -> Refresh results -> Confirm correct totals
+```
+
+---
+
+## 📝 Notes
+
+This test plan defines the testing strategy for FinancialTracker v1.
+
+Specific unit test classes, integration test setup, test data strategies, and execution details will be implemented during the coding phase.

@@ -108,7 +108,7 @@ FinancialTracker
 │   ├── requirements
 │   │   └── srs.md
 │   ├── testing
-│   │   └── testing-plan.md
+│   │   └── test-plan.md
 │   └── vision-and-scope.md
 └── README.md
 ```
@@ -128,7 +128,7 @@ Project documentation is stored in the `docs/` folder.
 | API Design | Complete | [View Document](docs/design/api-design.md) |
 | Architecture Document | Complete | [View Document](docs/design/architecture.md) |
 | ADRs | Complete | [View Folder](docs/adr) |
-| Test Plan | Complete | [View Document](docs/testing/testing-plan.md) |
+| Test Plan | Complete | [View Document](docs/testing/test-plan.md) |
 
 ---
 

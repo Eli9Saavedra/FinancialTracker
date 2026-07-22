@@ -178,11 +178,48 @@ The main relationships in FinancialTracker v1 are:
 ## 🧭 Relationship Summary
 
 ```text
-Category 1 ────< Income
-Category 1 ────< Expense
-Category 1 ────< Budget
+Category 1 ----< Income
+Category 1 ----< Expense
+Category 1 ----< Budget
 
 MonthlySummary
-   ├── derived from Income
-   ├── derived from Expense
-   └── derived from Budget
+   |-- derived from Income
+   |-- derived from Expense
+   `-- derived from Budget
+```
+
+---
+
+## ✅ Domain Assumptions
+
+The following assumptions apply to the v1 domain model:
+
+* The application is intended for one local user
+* All financial data is entered manually
+* Income and expense values are stored as decimal values
+* Monthly summaries are calculated from underlying records
+* Budgeting is category-based for v1
+
+---
+
+## ❌ Domain Exclusions
+
+The domain model for v1 does not include:
+
+* User accounts
+* Shared household finance data
+* Recurring transactions
+* Linked bank accounts
+* Credit cards or debt accounts
+* Investment tracking
+* Tax calculations
+* Savings goals
+* Financial notifications
+
+---
+
+## 📝 Notes
+
+This domain model defines the business-level structure of FinancialTracker v1.
+
+Database schema details, API contracts, and architecture behavior are documented separately in the database design, API design, and architecture documents.

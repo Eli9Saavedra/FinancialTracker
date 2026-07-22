@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="financialtracker.client/FinancialTracker.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="FinancialTracker.Server/FinancialTracker.Api.csproj" />
+</Solution>

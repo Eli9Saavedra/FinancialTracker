@@ -1,7 +1,7 @@
 <Solution>
-  <Project Path="financialtracker.client/FinancialTracker.client.esproj">
+  <Project Path="FinancialTracker.Client/FinancialTracker.client.esproj">
     <Build />
     <Deploy />
   </Project>
-  <Project Path="FinancialTracker.Server/FinancialTracker.Api.csproj" />
+  <Project Path="FinancialTracker.Api/FinancialTracker.Api.csproj" />
 </Solution>

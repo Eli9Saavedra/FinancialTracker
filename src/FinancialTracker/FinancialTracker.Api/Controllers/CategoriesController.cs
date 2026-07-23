@@ -52,9 +52,15 @@ namespace FinancialTracker.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> Create(CreateCategoryRequest request)
         {
-            var createdCategory = await _categoryService.CreateAsync(request);
-
-            return CreatedAtAction(nameof(GetById), new { id = createdCategory.Id }, createdCategory);
+            try
+            {
+                var createdCategory = await _categoryService.CreateAsync(request);
+                return CreatedAtAction(nameof(GetById), new { id = createdCategory.Id }, createdCategory);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -66,14 +72,21 @@ namespace FinancialTracker.Api.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryDto>> Update(Guid id, UpdateCategoryRequest request)
         {
-            var updatedCategory = await _categoryService.UpdateAsync(id, request); 
-
-            if (updatedCategory is null)
+            try
             {
-                return NotFound();
-            }
+                var updatedCategory = await _categoryService.UpdateAsync(id, request);
 
-            return Ok(updatedCategory);
+                if (updatedCategory is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(updatedCategory);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>

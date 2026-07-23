@@ -62,6 +62,11 @@ namespace FinancialTracker.Api.Services.Categories
         /// <returns></returns>
         public async Task<CategoryDto> CreateAsync(CreateCategoryRequest request)
         {
+            if (await _context.Categories.AnyAsync(category => category.Name == request.Name))
+            {
+                throw new InvalidOperationException("Category name already exists");
+            }
+
             var category = new Category
             {
                 Id = Guid.NewGuid(),
@@ -114,6 +119,11 @@ namespace FinancialTracker.Api.Services.Categories
         /// <returns></returns>
         public async Task<CategoryDto?> UpdateAsync(Guid id, UpdateCategoryRequest request)
         {
+            if (await _context.Categories.AnyAsync(category => category.Name == request.Name && category.Id != id))
+            {
+                throw new InvalidOperationException("Category name already exists");
+            }
+
             var category = await _context.Categories.FirstOrDefaultAsync(category => category.Id == id);
 
             if (category is null)

@@ -14,7 +14,7 @@ namespace FinancialTracker.Api.Services.Incomes
         }
 
         /// <summary>
-        /// Get evert income from the database, convert each one into a DTO, and return them all as a list
+        /// Get every income from the database, convert each one into a DTO, and return them all as a list
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<IncomeDto>> GetAllAsync()
@@ -117,11 +117,18 @@ namespace FinancialTracker.Api.Services.Incomes
             return true;
         }
 
+        /// <summary>
+        /// Find the income, replace its values with the new ones, save it, and return the updated result
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<IncomeDto?> UpdateAsync(Guid id, UpdateIncomeRequest request)
         {
             if (await _context.Incomes.AnyAsync(income => income.Source == request.Source && income.Id != id))
             {
-                throw new InvalidOperationException("Source name already exists");
+                throw new InvalidOperationException("Income name already exists");
             }
 
             var income = await _context.Incomes.FirstOrDefaultAsync(income => income.Id == id);

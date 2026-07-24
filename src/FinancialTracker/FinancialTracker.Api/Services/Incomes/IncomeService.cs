@@ -64,6 +64,8 @@ namespace FinancialTracker.Api.Services.Incomes
         /// <returns></returns>
         public async Task<IncomeDto> CreateAsync(CreateIncomeRequest request)
         {
+            await ValidateCategoryIdAsync(request.CategoryId);
+
             if (await _context.Incomes.AnyAsync(income => income.Source == request.Source))
             {
                 throw new InvalidOperationException("Income source already exists");
@@ -126,6 +128,8 @@ namespace FinancialTracker.Api.Services.Incomes
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<IncomeDto?> UpdateAsync(Guid id, UpdateIncomeRequest request)
         {
+            await ValidateCategoryIdAsync(request.CategoryId);
+
             if (await _context.Incomes.AnyAsync(income => income.Source == request.Source && income.Id != id))
             {
                 throw new InvalidOperationException("Income name already exists");
@@ -157,6 +161,15 @@ namespace FinancialTracker.Api.Services.Incomes
                 CreatedAt = income.CreatedAt,
                 UpdatedAt = income.UpdatedAt
             };
+        }
+
+        private async Task ValidateCategoryIdAsync(Guid? categoryId)
+        {
+            if (categoryId.HasValue && 
+                !await _context.Categories.AnyAsync(category => category.Id == categoryId.Value))
+            {
+                throw new InvalidOperationException("Category does not exist.");
+            }
         }
     }
 }

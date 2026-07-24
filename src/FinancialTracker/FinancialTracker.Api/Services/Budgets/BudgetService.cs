@@ -1,6 +1,5 @@
 ﻿using FinancialTracker.Api.Data;
 using FinancialTracker.Api.DTOs.Budgets;
-using FinancialTracker.Api.DTOs.Expenses;
 using FinancialTracker.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,6 +65,11 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <returns></returns>
         public async Task<BudgetDto> CreateAsync(CreateBudgetRequest request)
         {
+            await ValidateCategoryIdAsync(request.CategoryId);
+            ValidateAmount(request.Amount);
+            ValidateMonth(request.Month);
+            ValidateYear(request.Year);
+
             var budget = new Budget
             {
                 Id = Guid.NewGuid(),
@@ -122,6 +126,11 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <returns></returns>
         public async Task<BudgetDto?> UpdateAsync(Guid id, UpdateBudgetRequest request)
         {
+            await ValidateCategoryIdAsync(request.CategoryId);
+            ValidateAmount(request.Amount);
+            ValidateMonth(request.Month);
+            ValidateYear(request.Year);
+
             var budget = await _context.Budgets.FirstOrDefaultAsync(budget => budget.Id == id);
 
             if (budget is null)
@@ -149,6 +158,38 @@ namespace FinancialTracker.Api.Services.Budgets
                 CreatedAt = budget.CreatedAt,
                 UpdatedAt = budget.UpdatedAt
             };
+        }
+
+        private async Task ValidateCategoryIdAsync(Guid categoryId)
+        {
+            if (!await _context.Categories.AnyAsync(category => category.Id == categoryId))
+            {
+                throw new InvalidOperationException("Category does not exist.");
+            }
+        }
+
+        private static void ValidateAmount(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new InvalidOperationException("Amount must be greater than zero.");
+            }
+        }
+
+        private static void ValidateMonth(int month)
+        {
+            if (month < 1 || month > 12)
+            {
+                throw new InvalidOperationException("Month must be between 1 and 12.");
+            }
+        }
+
+        private static void ValidateYear(int year)
+        {
+            if (year < 1900 || year > 2100)
+            {
+                throw new InvalidOperationException("Year must be between 1900 and 2100.");
+            }
         }
     }
 }

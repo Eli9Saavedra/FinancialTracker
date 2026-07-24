@@ -69,6 +69,7 @@ namespace FinancialTracker.Api.Services.Budgets
             ValidateAmount(request.Amount);
             ValidateMonth(request.Month);
             ValidateYear(request.Year);
+            await EnsureNoDuplicateBudgetAsync(request.CategoryId, request.Month, request.Year);
 
             var budget = new Budget
             {
@@ -130,6 +131,7 @@ namespace FinancialTracker.Api.Services.Budgets
             ValidateAmount(request.Amount);
             ValidateMonth(request.Month);
             ValidateYear(request.Year);
+            await EnsureNoDuplicateBudgetAsync(request.CategoryId, request.Month, request.Year, id);
 
             var budget = await _context.Budgets.FirstOrDefaultAsync(budget => budget.Id == id);
 
@@ -189,6 +191,20 @@ namespace FinancialTracker.Api.Services.Budgets
             if (year < 1900 || year > 2100)
             {
                 throw new InvalidOperationException("Year must be between 1900 and 2100.");
+            }
+        }
+
+        private async Task EnsureNoDuplicateBudgetAsync(Guid categoryId, int month, int year, Guid? excludedId = null)
+        {
+            var exists = await _context.Budgets.AnyAsync(budget =>
+                budget.CategoryId == categoryId &&
+                budget.Month == month &&
+                budget.Year == year &&
+                (!excludedId.HasValue || budget.Id != excludedId.Value));
+
+            if (exists)
+            {
+                throw new InvalidOperationException("A budget already exists for this category, month, and year.");
             }
         }
     }

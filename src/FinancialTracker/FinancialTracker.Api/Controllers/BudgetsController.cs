@@ -59,6 +59,11 @@ namespace FinancialTracker.Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                if (ex.Message.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Conflict(ex.Message);
+                }
+
                 return BadRequest(ex.Message);
             }
         }
@@ -85,6 +90,11 @@ namespace FinancialTracker.Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                if (ex.Message.Contains("already exists", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Conflict(ex.Message);
+                }
+
                 return BadRequest(ex.Message);
             }
         }

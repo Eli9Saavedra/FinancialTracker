@@ -7,7 +7,7 @@ namespace FinancialTracker.Api.Services.Expenses
         Task<IEnumerable<ExpenseDto>> GetAllAsync();
         Task<ExpenseDto?> GetByIdAsync(Guid id);
         Task<ExpenseDto> CreateAsync(CreateExpenseRequest request);
-        Task<ExpenseDto> UpdateAsync(Guid id, UpdateExpenseRequest request);
+        Task<ExpenseDto?> UpdateAsync(Guid id, UpdateExpenseRequest request);
         Task<bool> DeleteAsync(Guid id);
     }
 }

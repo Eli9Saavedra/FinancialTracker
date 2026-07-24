@@ -67,14 +67,17 @@ namespace FinancialTracker.Api.Services.Expenses
         {
             await ValidateCategoryIdAsync(request.CategoryId);
 
-            if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant));
+            if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant))
+            {
+                throw new InvalidOperationException("Expense merchant already exists");
+            }
 
             var expense = new Expense
             {
                 Id = Guid.NewGuid(),
                 Merchant = request.Merchant,
                 Amount = request.Amount,
-                DateSpent = DateTime.UtcNow,
+                DateSpent = request.DateSpent,
                 CategoryId = request.CategoryId,
                 Notes = request.Notes,
                 CreatedAt = DateTime.UtcNow,
@@ -127,7 +130,10 @@ namespace FinancialTracker.Api.Services.Expenses
         {
             await ValidateCategoryIdAsync(request.CategoryId);
 
-            if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant && expense.Id != id)) ;
+            if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant && expense.Id != id))
+            {
+                throw new InvalidOperationException("Expense merchant already exists");
+            }
 
             var expense = await _context.Expenses.FirstOrDefaultAsync(expense => expense.Id == id);
 
@@ -138,9 +144,9 @@ namespace FinancialTracker.Api.Services.Expenses
 
             expense.Merchant = request.Merchant;
             expense.Amount = request.Amount;
-            expense.DateSpent = DateTime.UtcNow;
+            expense.DateSpent = request.DateSpent;
+            expense.Notes = request.Notes;
             expense.CategoryId = request.CategoryId;
-            expense.CreatedAt = DateTime.UtcNow;
             expense.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

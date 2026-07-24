@@ -1,5 +1,6 @@
 using FinancialTracker.Api.Data;
 using FinancialTracker.Api.Services.Categories;
+using FinancialTracker.Api.Services.Expenses;
 using FinancialTracker.Api.Services.Incomes;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
 builder.Services.AddDbContextFactory<FinancialTrackerDbContext>(
     opt => opt.UseSqlServer(

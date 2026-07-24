@@ -65,6 +65,7 @@ namespace FinancialTracker.Api.Services.Expenses
         /// <returns></returns>
         public async Task<ExpenseDto> CreateAsync(CreateExpenseRequest request)
         {
+            ValidateDateSpent(request.DateSpent);
             await ValidateCategoryIdAsync(request.CategoryId);
 
             if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant))
@@ -128,6 +129,7 @@ namespace FinancialTracker.Api.Services.Expenses
         /// <returns></returns>
         public async Task<ExpenseDto?> UpdateAsync(Guid id, UpdateExpenseRequest request)
         {
+            ValidateDateSpent(request.DateSpent);
             await ValidateCategoryIdAsync(request.CategoryId);
 
             if (await _context.Expenses.AnyAsync(expense => expense.Merchant == request.Merchant && expense.Id != id))
@@ -162,6 +164,14 @@ namespace FinancialTracker.Api.Services.Expenses
                 CreatedAt = expense.CreatedAt,
                 UpdatedAt = expense.UpdatedAt
             };
+        }
+
+        private static void ValidateDateSpent(DateTime dateSpent)
+        {
+            if (dateSpent == DateTime.MinValue)
+            {
+                throw new InvalidOperationException("DateSpent must be a valid date.");
+            }
         }
 
         private async Task ValidateCategoryIdAsync(Guid? categoryId)

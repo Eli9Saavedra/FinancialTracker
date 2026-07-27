@@ -3,6 +3,7 @@ using FinancialTracker.Api.Services.Budgets;
 using FinancialTracker.Api.Services.Categories;
 using FinancialTracker.Api.Services.Expenses;
 using FinancialTracker.Api.Services.Incomes;
+using FinancialTracker.Api.Services.Summaries;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<ISummaryService, SummaryService>();
 
 builder.Services.AddDbContextFactory<FinancialTrackerDbContext>(
     opt => opt.UseSqlServer(

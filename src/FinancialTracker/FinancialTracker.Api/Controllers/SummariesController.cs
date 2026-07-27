@@ -40,5 +40,18 @@ namespace FinancialTracker.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("budget-vs-actual")]
+        public async Task<ActionResult<IEnumerable<BudgetVsActualDto>>> GetBudgetVsActualAsync([FromQuery] int month, [FromQuery] int year)
+        {
+            if (month < 1 || month > 12 || year < 1)
+            {
+                return BadRequest();
+            }
+
+            var result = await _summaryService.GetBudgetVsActualsAsync(month, year);
+
+            return Ok(result);
+        }
     }
 }

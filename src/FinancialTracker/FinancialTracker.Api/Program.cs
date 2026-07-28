@@ -23,7 +23,19 @@ builder.Services.AddDbContextFactory<FinancialTrackerDbContext>(
     opt => opt.UseSqlServer(
         builder.Configuration.GetConnectionString("FinancialTrackerDb")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:61184")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowClient");
 
 app.UseDefaultFiles();
 app.MapStaticAssets();

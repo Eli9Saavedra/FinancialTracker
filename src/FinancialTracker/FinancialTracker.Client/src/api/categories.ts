@@ -9,7 +9,7 @@ export function getCategoryById(id: string): Promise<Category> {
     return apiFetch<Category>(`/api/categories/${id}`);
 }
 
-export function createCategory(data: { name: string; type: string; description?: string; }): Promise<Category> {
+export function createCategory(data: { name: string; type: number; description?: string; }): Promise<Category> {
     return apiFetch<Category>('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -9,7 +9,8 @@ import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
 import ErrorBanner from '../components/ui/ErrorBanner/ErrorBanner';
 import Table from '../components/ui/Table/Table';
 import Button from '../components/ui/Button/Button';
-
+import Modal from '../components/ui/Modal/Modal';
+import CategoryForm from '../components/categories/CategoryForm';
 
 
 function CategoriesPage() {
@@ -17,6 +18,7 @@ function CategoriesPage() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     /**
      * useEffect - Runs once the component loads 9empty [] dependency array)
@@ -35,6 +37,11 @@ function CategoriesPage() {
             });
     }, []);
 
+    function handleSuccess() {
+        setIsModalOpen(false);
+        getCategories().then(data => setCategories(data));
+    }
+
     if (loading) return <LoadingSpinner />;
     if (error) return <ErrorBanner message={error} />
 
@@ -42,7 +49,7 @@ function CategoriesPage() {
         <div>
             <div>
                 <h1>Categories</h1>
-                <Button label="New Category" onClick={() => { }} variant="primary" />
+                <Button label="New Category" onClick={() => setIsModalOpen(true)} variant="primary" />
             </div>
             <Table
                 columns={['Name', 'Type', 'Description', 'Last Updated']}
@@ -58,6 +65,13 @@ function CategoriesPage() {
                     </tr>
                 ))}
             </Table>
+            <Modal
+                isOpen={isModalOpen}
+                title="New Category"
+                onClose={() => setIsModalOpen(false)}
+            >
+                <CategoryForm onSuccess={handleSuccess} onCancel={() => setIsModalOpen(false)} />
+            </Modal>
         </div>
     )
 }

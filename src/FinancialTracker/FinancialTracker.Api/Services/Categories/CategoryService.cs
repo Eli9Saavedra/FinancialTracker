@@ -106,7 +106,15 @@ namespace FinancialTracker.Api.Services.Categories
             }
 
             _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new InvalidOperationException("Cannot delete this category because it is in use by expenses, incomes, or budgets.");
+            }
 
             return true;
         }

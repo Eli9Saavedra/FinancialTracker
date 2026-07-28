@@ -3,7 +3,7 @@
  * useEffect - Runs code when teh component loads - e.g. fetch data on page open
  */
 import { useEffect, useState } from 'react';
-import { getCategories } from '../api/categories';
+import { getCategories, deleteCategory } from '../api/categories';
 import type { Category } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
 import ErrorBanner from '../components/ui/ErrorBanner/ErrorBanner';
@@ -20,6 +20,8 @@ function CategoriesPage() {
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     /**
      * useEffect - Runs once the component loads 9empty [] dependency array)
@@ -42,6 +44,23 @@ function CategoriesPage() {
         setIsModalOpen(false);
         setSelectedCategory(null);
         getCategories().then(data => setCategories(data));
+    }
+
+    async function handleDelete() {
+        if (!categoryToDelete) return;
+
+        try {
+            await deleteCategory(categoryToDelete.id);
+            setCategories(prev => prev.filter(c => c.id !== categoryToDelete.id));
+            setCategoryToDelete(null);
+            setDeleteError(null);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setDeleteError(err.message);
+            } else {
+                setDeleteError('Failed to delete category');
+            }
+        }
     }
 
     if (loading) return <LoadingSpinner />;
@@ -73,6 +92,11 @@ function CategoriesPage() {
                                     setIsModalOpen(true);
                                 }}
                             />
+                            <Button
+                                label="Delete"
+                                variant="danger"
+                                onClick={() => setCategoryToDelete(category)}
+                            />
                         </td>
                     </tr>
                 ))}
@@ -87,6 +111,16 @@ function CategoriesPage() {
                     onCancel={() => { setIsModalOpen(false); setSelectedCategory(null); }}
                               category={selectedCategory ?? undefined}
                 />
+            </Modal>
+            <Modal
+                isOpen={categoryToDelete !== null}
+                title="Delete Category"
+                onClose={() => { setCategoryToDelete(null); setDeleteError(null); }}
+            >
+                {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
+                <p>Are you sure you want to delete <strong>{categoryToDelete?.name}</strong>?</p>
+                <Button label="Delete" variant="danger" onClick={handleDelete} />
+                <Button label="Cancel" variant='secondary' onClick={() => { setCategoryToDelete(null); setDeleteError(null); }} />
             </Modal>
         </div>
     )

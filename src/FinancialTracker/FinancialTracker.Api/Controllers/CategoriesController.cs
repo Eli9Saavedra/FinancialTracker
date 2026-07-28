@@ -97,14 +97,21 @@ namespace FinancialTracker.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            var isDeleted = await _categoryService.DeleteAsync(id);
-
-            if (isDeleted is false)
+            try
             {
-                return NotFound();
-            }
+                var isDeleted = await _categoryService.DeleteAsync(id);
 
-            return NoContent();
+                if (isDeleted is false)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }

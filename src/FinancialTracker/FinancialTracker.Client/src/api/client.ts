@@ -15,7 +15,11 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
     // Combines the URL + path -> http://localhost:5228/api/categories
     const response = await fetch(BASE_URL + path, options);
 
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    if (!response.ok) {
+        const text = await response.text();
+        const message = text || `Request failed (${response.status})`;
+        throw new Error(message);
+    }
 
     return response.json();
 }

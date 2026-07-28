@@ -154,6 +154,22 @@ Design tokens are CSS variables defined in `src/styles/theme.css`. Always use to
 
 ---
 
+## ⚙️ Environment Variables
+
+Environment variables for the React client are defined in `.env` files inside the `FinancialTracker.Client` folder.
+
+| Variable | Description | Example |
+| --- | --- | --- |
+| `VITE_API_BASE_URL` | Base URL of the backend API | `https://localhost:5228/api` |
+
+| File | Used When |
+| --- | --- |
+| `.env.development` | Running locally with `npm run dev` |
+| `.env.production` | Building for production with `npm run build` |
+
+> `.env` files containing secrets should not be committed to source control.
+
+
 ## 📂 Project Structure
 
 ```text

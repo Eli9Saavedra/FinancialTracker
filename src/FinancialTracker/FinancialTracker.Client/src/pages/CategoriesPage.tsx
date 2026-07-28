@@ -7,6 +7,8 @@ import { getCategories } from '../api/categories';
 import type { Category } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
 import ErrorBanner from '../components/ui/ErrorBanner/ErrorBanner';
+import Table from '../components/ui/Table/Table';
+import Button from '../components/ui/Button/Button';
 
 
 
@@ -37,7 +39,26 @@ function CategoriesPage() {
     if (error) return <ErrorBanner message={error} />
 
     return (
-        <p>Loaded {categories.length} categories</p>
+        <div>
+            <div>
+                <h1>Categories</h1>
+                <Button label="New Category" onClick={() => { }} variant="primary" />
+            </div>
+            <Table
+                columns={['Name', 'Type', 'Description', 'Last Updated']}
+                isEmpty={categories.length === 0}
+                emptyMessage="No categories found"
+            >
+                {categories.map(category => (
+                    <tr key={category.id}>
+                        <td>{category.name}</td>
+                        <td>{category.type}</td>
+                        <td>{category.description ?? '-'}</td>
+                        <td>{category.updatedAt}</td>
+                    </tr>
+                ))}
+            </Table>
+        </div>
     )
 }
 

@@ -19,6 +19,7 @@ function CategoriesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     /**
      * useEffect - Runs once the component loads 9empty [] dependency array)
@@ -39,6 +40,7 @@ function CategoriesPage() {
 
     function handleSuccess() {
         setIsModalOpen(false);
+        setSelectedCategory(null);
         getCategories().then(data => setCategories(data));
     }
 
@@ -52,7 +54,7 @@ function CategoriesPage() {
                 <Button label="New Category" onClick={() => setIsModalOpen(true)} variant="primary" />
             </div>
             <Table
-                columns={['Name', 'Type', 'Description', 'Last Updated']}
+                columns={['Name', 'Type', 'Description', 'Last Updated', 'Actions']}
                 isEmpty={categories.length === 0}
                 emptyMessage="No categories found"
             >
@@ -62,15 +64,29 @@ function CategoriesPage() {
                         <td>{category.type}</td>
                         <td>{category.description ?? '-'}</td>
                         <td>{category.updatedAt}</td>
+                        <td>
+                            <Button
+                                label="Edit"
+                                variant="secondary"
+                                onClick={() => {
+                                    setSelectedCategory(category);
+                                    setIsModalOpen(true);
+                                }}
+                            />
+                        </td>
                     </tr>
                 ))}
             </Table>
             <Modal
                 isOpen={isModalOpen}
-                title="New Category"
-                onClose={() => setIsModalOpen(false)}
+                title={selectedCategory ? 'Edit Category' : 'New Category'}
+                onClose={() => {
+                    setIsModalOpen(false); setSelectedCategory(null); }}
             >
-                <CategoryForm onSuccess={handleSuccess} onCancel={() => setIsModalOpen(false)} />
+                <CategoryForm onSuccess={handleSuccess}
+                    onCancel={() => { setIsModalOpen(false); setSelectedCategory(null); }}
+                              category={selectedCategory ?? undefined}
+                />
             </Modal>
         </div>
     )

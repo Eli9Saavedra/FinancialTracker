@@ -17,7 +17,7 @@ export function createCategory(data: { name: string; type: number; description?:
     });
 }
 
-export function updateCategory(id: string , data: { name: string; type: string; description?: string; }): Promise<Category> {
+export function updateCategory(id: string, data: { name: string; type: number; description?: string; }): Promise<Category> {
     return apiFetch<Category>(`/api/categories/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

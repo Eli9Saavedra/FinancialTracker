@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import { createCategory } from '../../api/categories';
 import Input from '../ui/Input/Input';
 import Select from '../ui/Select/Select';
 import TextArea from '../ui/TextArea/TextArea';
 import Button from '../ui/Button/Button';
+import { createCategory, updateCategory } from '../../api/categories';
+import type { Category } from '../../types';
 
 interface CategoryFormProps {
     onSuccess: () => void;
     onCancel: () => void;
+    category?: Category;
 }
 
-function CategoryForm({ onSuccess, onCancel }: CategoryFormProps) {
-    const [name, setName] = useState('');
-    const [type, setType] = useState('0');
-    const [description, setDescription] = useState('');
+function CategoryForm({ onSuccess, onCancel, category }: CategoryFormProps) {
+    const [name, setName] = useState(category?.name ?? '');
+    const [type, setType] = useState(category?.type?.toString() ?? '0');
+    const [description, setDescription] = useState(category?.description ?? '');
     const [error, setError] = useState<string | null>(null);
 
     async function handleSubmit() {
@@ -23,7 +25,11 @@ function CategoryForm({ onSuccess, onCancel }: CategoryFormProps) {
         }
 
         try {
-            await createCategory({ name, type: parseInt(type), description });
+            if (category) {
+                await updateCategory(category.id, { name, type: parseInt(type), description });
+            } else {
+                await createCategory({ name, type: parseInt(type), description });
+            }
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof Error) {

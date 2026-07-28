@@ -1,0 +1,57 @@
+/* Brand tokens - same as always */
+:root {
+    --color-primary: #DAA520;
+    --color-secondary: #4682B4;
+    --color-accent: #B8860B;
+    --color-success: #2e7d32;
+    --color-warning: #f57c00;
+    --color-danger: #c62828;
+
+    /* Typography */
+    --font-family: system-ui, sans-serif;
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+    --line-height-base: 1.5;
+
+    /* Spacing scale */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+
+    /* Border and shadow */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --border-width: 1px;
+    --border-style: solid;
+}
+
+/* Light mode surfaces (default) */
+:root {
+    --color-bg: #fffdf5;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b6b6b;
+    --color-border: #e0d8c0;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #1c1a14;
+        --color-surface: #2a2820;
+        --color-text: #f0ead6;
+        --color-text-muted: #a89f8a;
+        --color-border: #3d3a2e;
+    }
+}

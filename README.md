@@ -87,6 +87,73 @@ SQL Server LocalDB stores categories, income records, expense records, and budge
 
 ---
 
+## 🎨 Design Tokens
+
+Design tokens are CSS variables defined in `src/styles/theme.css`. Always use tokens instead of hard-coded values in component styles.
+
+---
+
+### 🌈 Colour Tokens
+
+| Token | Purpose |
+| --- | --- |
+| `--color-primary` | Main brand colour — buttons, highlights |
+| `--color-secondary` | Secondary actions, links |
+| `--color-accent` | Hover states, emphasis |
+| `--color-success` | Positive values, income indicators |
+| `--color-warning` | Near-budget warnings |
+| `--color-danger` | Over-budget, errors, destructive actions |
+| `--color-bg` | Page background (light/dark aware) |
+| `--color-surface` | Card and panel backgrounds |
+| `--color-text` | Default body text |
+| `--color-text-muted` | Secondary/helper text |
+| `--color-border` | Dividers and input borders |
+
+---
+
+### ✏️ Typography Tokens
+
+| Token | Purpose |
+| --- | --- |
+| `--font-family` | Base font stack |
+| `--font-size-sm` | Small/helper text |
+| `--font-size-base` | Body text |
+| `--font-size-lg` | Subheadings |
+| `--font-size-xl` | Page headings |
+| `--font-weight-normal` | Body weight |
+| `--font-weight-bold` | Emphasis weight |
+| `--line-height-base` | Body line height |
+
+---
+
+### 📐 Spacing Tokens
+
+| Token | Value |
+| --- | --- |
+| `--space-1` | `4px` |
+| `--space-2` | `8px` |
+| `--space-3` | `12px` |
+| `--space-4` | `16px` |
+| `--space-6` | `24px` |
+| `--space-8` | `32px` |
+| `--space-12` | `48px` |
+
+---
+
+### 🔲 Border & Shadow Tokens
+
+| Token | Purpose |
+| --- | --- |
+| `--radius-sm` | Small corner radius |
+| `--radius-md` | Medium corner radius |
+| `--radius-lg` | Large corner radius |
+| `--shadow-sm` | Subtle element shadow |
+| `--shadow-md` | Card/panel shadow |
+| `--border-width` | Default border thickness |
+| `--border-style` | Default border style |
+
+---
+
 ## 📂 Project Structure
 
 ```text

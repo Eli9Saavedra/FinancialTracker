@@ -1,0 +1,35 @@
+.btn {
+    padding: var(--space-2);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: var(--border-width) var(--border-style) transparent;
+}
+
+.primary {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.secondary {
+    background-color: var(--color-secondary);
+    color: #fff;
+}
+
+.danger {
+    background-color: var(--color-danger);
+    color: #fff;
+}
+
+.primary:hover {
+    opacity: 0.85;
+}
+
+.secondary:hover {
+    opacity: 0.85;
+}
+
+.danger:hover {
+    opacity: 0.85;
+}

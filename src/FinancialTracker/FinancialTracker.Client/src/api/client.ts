@@ -1,8 +1,18 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export class ApiError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
+    }
+}
+
 /**
  * export - makes it avaiable to other files
- * async - it will use await inside 
+ * async - it will use await inside
  * <T> - a placeholder for "whatever type the caller wants back"
  * path - the endpoint path e.g. 'api/categories'
  * options? - optional settings like HTTP method, body, headers
@@ -11,14 +21,13 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
  * @param options
  */
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-
     // Combines the URL + path -> http://localhost:5228/api/categories
     const response = await fetch(BASE_URL + path, options);
 
     if (!response.ok) {
         const text = await response.text();
         const message = text || `Request failed (${response.status})`;
-        throw new Error(message);
+        throw new ApiError(message, response.status);
     }
 
     if (response.status === 204) {

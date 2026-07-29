@@ -4,6 +4,7 @@ import TextArea from '../ui/TextArea/TextArea';
 import Button from '../ui/Button/Button';
 import CategorySelect from '../categories/CategorySelect';
 import { createBudget, updateBudget } from '../../api/budgets';
+import { ApiError } from '../../api/client';
 import type { Budget } from '../../types';
 
 interface BudgetFormProps {
@@ -67,6 +68,11 @@ function BudgetForm({ defaultMonth, defaultYear, onSuccess, onCancel, budget }: 
 
             onSuccess();
         } catch (err: unknown) {
+            if (err instanceof ApiError && err.status === 409) {
+                setError('A budget already exists for this category, month, and year. Try editing the existing budget, or change the values and retry.');
+                return;
+            }
+
             if (err instanceof Error) {
                 setError(err.message);
             } else {

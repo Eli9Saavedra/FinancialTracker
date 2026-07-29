@@ -5,10 +5,13 @@ import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
 import ErrorBanner from '../components/ui/ErrorBanner/ErrorBanner';
 import Table from '../components/ui/Table/Table';
 import Button from '../components/ui/Button/Button';
+import Modal from '../components/ui/Modal/Modal';
+import IncomeForm from '../components/incomes/IncomeForm';
 function IncomesPage() {
     const [incomes, setIncomes] = useState<Income[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         getIncomes()
@@ -22,6 +25,11 @@ function IncomesPage() {
             });
     }, []);
 
+    function handleSuccess() {
+        setIsModalOpen(false);
+        getIncomes().then(data => setIncomes(data));
+    }
+
    
 
     if (loading) return <LoadingSpinner />
@@ -31,7 +39,7 @@ function IncomesPage() {
         <div>
             <div>
                 <h1>Incomes</h1>
-                <Button label="New Income" onClick={() => { } } variant="primary" />
+                <Button label="New Income" onClick={() => setIsModalOpen(true)} variant="primary" />
             </div>
             <Table
                 columns={['Source', 'Amount', 'Date Received', 'Category', 'Notes']}
@@ -48,6 +56,16 @@ function IncomesPage() {
                     </tr>
                 ))}
             </Table>
+            <Modal
+                isOpen={isModalOpen}
+                title="New Income"
+                onClose={() => setIsModalOpen(false)}
+            >
+                <IncomeForm
+                    onSuccess={handleSuccess}
+                    onCancel={() => setIsModalOpen(false)}
+                />
+            </Modal>
         </div>
     )
 

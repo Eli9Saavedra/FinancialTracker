@@ -19,6 +19,7 @@ function BudgetsPage() {
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1);
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
     const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1);
     const yearOptions = [selectedYear - 2, selectedYear - 1, selectedYear, selectedYear + 1, selectedYear + 2];
@@ -50,9 +51,20 @@ function BudgetsPage() {
         loadBudgets(selectedMonth, selectedYear);
     }, [selectedMonth, selectedYear]);
 
-    function handleCreateSuccess() {
+    function handleSuccess() {
         setIsModalOpen(false);
+        setSelectedBudget(null);
         loadBudgets(selectedMonth, selectedYear);
+    }
+
+    function openCreateModal() {
+        setSelectedBudget(null);
+        setIsModalOpen(true);
+    }
+
+    function openEditModal(budget: Budget) {
+        setSelectedBudget(budget);
+        setIsModalOpen(true);
     }
 
     if (loading) return <LoadingSpinner />;
@@ -82,11 +94,11 @@ function BudgetsPage() {
                         <option key={y} value={y}>{y}</option>
                     ))}
                 </select>
-                <Button label="New Budget" onClick={() => setIsModalOpen(true)} variant="primary" />
+                <Button label="New Budget" onClick={openCreateModal} variant="primary" />
             </div>
 
             <Table
-                columns={['Category', 'Amount', 'Month', 'Year', 'Notes']}
+                columns={['Category', 'Amount', 'Month', 'Year', 'Notes', 'Actions']}
                 isEmpty={budgets.length === 0}
                 emptyMessage="No budgets found"
             >
@@ -97,20 +109,34 @@ function BudgetsPage() {
                         <td>{budget.month}</td>
                         <td>{budget.year}</td>
                         <td>{budget.notes ?? '-'}</td>
+                        <td>
+                            <Button
+                                label="Edit"
+                                variant="secondary"
+                                onClick={() => openEditModal(budget)}
+                            />
+                        </td>
                     </tr>
                 ))}
             </Table>
 
             <Modal
                 isOpen={isModalOpen}
-                title="New Budget"
-                onClose={() => setIsModalOpen(false)}
+                title={selectedBudget ? 'Edit Budget' : 'New Budget'}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedBudget(null);
+                }}
             >
                 <BudgetForm
                     defaultMonth={selectedMonth}
                     defaultYear={selectedYear}
-                    onSuccess={handleCreateSuccess}
-                    onCancel={() => setIsModalOpen(false)}
+                    budget={selectedBudget ?? undefined}
+                    onSuccess={handleSuccess}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                        setSelectedBudget(null);
+                    }}
                 />
             </Modal>
         </div>

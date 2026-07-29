@@ -3,21 +3,23 @@ import Input from '../ui/Input/Input';
 import TextArea from '../ui/TextArea/TextArea';
 import Button from '../ui/Button/Button';
 import CategorySelect from '../categories/CategorySelect';
-import { createBudget } from '../../api/budgets';
+import { createBudget, updateBudget } from '../../api/budgets';
+import type { Budget } from '../../types';
 
 interface BudgetFormProps {
     defaultMonth: number;
     defaultYear: number;
     onSuccess: () => void;
     onCancel: () => void;
+    budget?: Budget;
 }
 
-function BudgetForm({ defaultMonth, defaultYear, onSuccess, onCancel }: BudgetFormProps) {
-    const [categoryId, setCategoryId] = useState('');
-    const [amount, setAmount] = useState('0');
-    const [month, setMonth] = useState(defaultMonth.toString());
-    const [year, setYear] = useState(defaultYear.toString());
-    const [notes, setNotes] = useState('');
+function BudgetForm({ defaultMonth, defaultYear, onSuccess, onCancel, budget }: BudgetFormProps) {
+    const [categoryId, setCategoryId] = useState(budget?.categoryId ?? '');
+    const [amount, setAmount] = useState(budget ? budget.amount.toString() : '0');
+    const [month, setMonth] = useState((budget?.month ?? defaultMonth).toString());
+    const [year, setYear] = useState((budget?.year ?? defaultYear).toString());
+    const [notes, setNotes] = useState(budget?.notes ?? '');
     const [error, setError] = useState<string | null>(null);
 
     async function handleSubmit() {
@@ -45,20 +47,30 @@ function BudgetForm({ defaultMonth, defaultYear, onSuccess, onCancel }: BudgetFo
         }
 
         try {
-            await createBudget({
-                categoryId,
-                amount: parsedAmount,
-                month: parsedMonth,
-                year: parsedYear,
-                notes: notes.trim() ? notes : undefined
-            });
+            if (budget) {
+                await updateBudget(budget.id, {
+                    categoryId,
+                    amount: parsedAmount,
+                    month: parsedMonth,
+                    year: parsedYear,
+                    notes: notes.trim() ? notes : undefined
+                });
+            } else {
+                await createBudget({
+                    categoryId,
+                    amount: parsedAmount,
+                    month: parsedMonth,
+                    year: parsedYear,
+                    notes: notes.trim() ? notes : undefined
+                });
+            }
 
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError('Failed to create budget');
+                setError(budget ? 'Failed to update budget' : 'Failed to create budget');
             }
         }
     }

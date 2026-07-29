@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getBudgets } from '../api/budgets';
+import { getBudgets, deleteBudget } from '../api/budgets';
 import { getCategories } from '../api/categories';
 import type { Budget, Category } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
@@ -20,6 +20,8 @@ function BudgetsPage() {
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
+    const [budgetToDelete, setBudgetToDelete] = useState<Budget | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1);
     const yearOptions = [selectedYear - 2, selectedYear - 1, selectedYear, selectedYear + 1, selectedYear + 2];
@@ -65,6 +67,23 @@ function BudgetsPage() {
     function openEditModal(budget: Budget) {
         setSelectedBudget(budget);
         setIsModalOpen(true);
+    }
+
+    async function handleDelete() {
+        if (!budgetToDelete) return;
+
+        try {
+            await deleteBudget(budgetToDelete.id);
+            setBudgets(prev => prev.filter(b => b.id !== budgetToDelete.id));
+            setBudgetToDelete(null);
+            setDeleteError(null);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setDeleteError(err.message);
+            } else {
+                setDeleteError('Failed to delete budget');
+            }
+        }
     }
 
     if (loading) return <LoadingSpinner />;
@@ -115,6 +134,14 @@ function BudgetsPage() {
                                 variant="secondary"
                                 onClick={() => openEditModal(budget)}
                             />
+                            <Button
+                                label="Delete"
+                                variant="danger"
+                                onClick={() => {
+                                    setBudgetToDelete(budget);
+                                    setDeleteError(null);
+                                }}
+                            />
                         </td>
                     </tr>
                 ))}
@@ -136,6 +163,30 @@ function BudgetsPage() {
                     onCancel={() => {
                         setIsModalOpen(false);
                         setSelectedBudget(null);
+                    }}
+                />
+            </Modal>
+
+            <Modal
+                isOpen={budgetToDelete !== null}
+                title="Delete Budget"
+                onClose={() => {
+                    setBudgetToDelete(null);
+                    setDeleteError(null);
+                }}
+            >
+                {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
+                <p>
+                    Are you sure you want to delete the budget for{' '}
+                    <strong>{budgetToDelete ? getCategoryName(budgetToDelete.categoryId) : ''}</strong>?
+                </p>
+                <Button label="Delete" variant="danger" onClick={handleDelete} />
+                <Button
+                    label="Cancel"
+                    variant="secondary"
+                    onClick={() => {
+                        setBudgetToDelete(null);
+                        setDeleteError(null);
                     }}
                 />
             </Modal>

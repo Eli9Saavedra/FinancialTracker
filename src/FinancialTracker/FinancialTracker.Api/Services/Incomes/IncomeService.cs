@@ -146,6 +146,7 @@ namespace FinancialTracker.Api.Services.Incomes
             income.Amount = request.Amount;
             income.DateReceived = request.DateReceived;
             income.CategoryId = request.CategoryId;
+            income.Notes = request.Notes;
             income.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

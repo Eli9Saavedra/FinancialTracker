@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getIncomes } from '../api/incomes';
+import { getIncomes, deleteIncome } from '../api/incomes';
 import type { Income } from '../types';
 import LoadingSpinner from '../components/ui/LoadingSpinner/LoadingSpinner';
 import ErrorBanner from '../components/ui/ErrorBanner/ErrorBanner';
@@ -13,6 +13,9 @@ function IncomesPage() {
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
+    const [incomeToDelete, setIncomeToDelete] = useState<Income | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
+    
 
     useEffect(() => {
         getIncomes()
@@ -30,6 +33,23 @@ function IncomesPage() {
         setIsModalOpen(false);
         setSelectedIncome(null);
         getIncomes().then(data => setIncomes(data));
+    }
+
+    async function handleDelete() {
+        if (!incomeToDelete) return;
+
+        try {
+            await deleteIncome(incomeToDelete.id);
+            setIncomes(prev => prev.filter(i => i.id !== incomeToDelete.id));
+            setIncomeToDelete(null);
+            setDeleteError(null);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setDeleteError(err.message);
+            } else {
+                setDeleteError('Failed to delete income');
+            }
+        }
     }
 
    
@@ -65,6 +85,11 @@ function IncomesPage() {
                                     setIsModalOpen(true)
                                 }}
                             />
+                            <Button
+                                label='Delete'
+                                variant="danger"
+                                onClick={() => setIncomeToDelete(income)}
+                            />
                         </td>
                     </tr>
                 ))}
@@ -80,6 +105,16 @@ function IncomesPage() {
                     onCancel={() => { setIsModalOpen(false); setSelectedIncome(null); }}
                     income={selectedIncome ?? undefined}
                 />
+            </Modal>
+            <Modal
+                isOpen={incomeToDelete !== null}
+                title="Delete Income"
+                onClose={() => { setIncomeToDelete(null); setDeleteError(null); }}
+            >
+                {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
+                <p>Are you sure you want to delete <strong>{incomeToDelete?.source}</strong>?</p>
+                <Button label="Delete" variant="danger" onClick={handleDelete} />
+                <Button label="Cancel" variant='secondary' onClick={() => { setIncomeToDelete(null); setDeleteError(null); }} />
             </Modal>
         </div>
     )

@@ -70,7 +70,7 @@ function CategoriesPage() {
         <div>
             <div>
                 <h1>Categories</h1>
-                <Button label="New Category" onClick={() => setIsModalOpen(true)} variant="primary" />
+                <Button label="New Category" onClick={() => { setSelectedCategory(null); setIsModalOpen(true) }} variant="primary" />
             </div>
             <Table
                 columns={['Name', 'Type', 'Description', 'Last Updated', 'Actions']}

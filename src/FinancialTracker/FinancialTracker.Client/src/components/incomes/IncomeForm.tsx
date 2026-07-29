@@ -3,7 +3,7 @@ import Input from '../ui/Input/Input';
 import TextArea from '../ui/TextArea/TextArea';
 import Button from '../ui/Button/Button';
 import CategorySelect from '../categories/CategorySelect';
-import { createIncome } from '../../api/incomes';
+import { createIncome, updateIncome } from '../../api/incomes';
 import type { Income } from '../../types';
 
 interface IncomeFormProps {
@@ -15,7 +15,7 @@ interface IncomeFormProps {
 function IncomeForm({ onSuccess, onCancel, income }: IncomeFormProps) {
     const [source, setSource] = useState(income?.source ?? '');
     const [amount, setAmount] = useState(income?.amount.toString() ?? '0');
-    const [dateReceived, setDateReceived] = useState(income?.dateReceived ?? '');
+    const [dateReceived, setDateReceived] = useState(income?.dateReceived ? income.dateReceived.slice(0, 10): '');
     const [categoryId, setCategoryId] = useState(income?.categoryId ?? '');
     const [notes, setNotes] = useState(income?.notes ?? '');
     const [error, setError] = useState<string | null>(null);
@@ -35,13 +35,24 @@ function IncomeForm({ onSuccess, onCancel, income }: IncomeFormProps) {
         }
 
         try {
-            await createIncome({
-                source,
-                amount: parseFloat(amount),
-                dateReceived,
-                categoryId: categoryId || undefined,
-                notes
-            });
+            if (income) {
+                await updateIncome(income.id, {
+                    source,
+                    amount: parseFloat(amount),
+                    dateReceived,
+                    categoryId: categoryId || undefined,
+                    notes
+                });
+            } else {
+                await createIncome({
+                    source,
+                    amount: parseFloat(amount),
+                    dateReceived,
+                    categoryId: categoryId || undefined,
+                    notes
+                });
+                
+            }
             onSuccess();
         } catch (err: unknown) {
             if (err instanceof Error) {

@@ -12,6 +12,7 @@ function IncomesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
 
     useEffect(() => {
         getIncomes()
@@ -27,6 +28,7 @@ function IncomesPage() {
 
     function handleSuccess() {
         setIsModalOpen(false);
+        setSelectedIncome(null);
         getIncomes().then(data => setIncomes(data));
     }
 
@@ -39,10 +41,10 @@ function IncomesPage() {
         <div>
             <div>
                 <h1>Incomes</h1>
-                <Button label="New Income" onClick={() => setIsModalOpen(true)} variant="primary" />
+                <Button label="New Income" onClick={() => { setSelectedIncome(null); setIsModalOpen(true) }} variant="primary" />
             </div>
             <Table
-                columns={['Source', 'Amount', 'Date Received', 'Category', 'Notes']}
+                columns={['Source', 'Amount', 'Date Received', 'Category', 'Notes', 'Last Updated', 'Actions']}
                 isEmpty={incomes.length === 0}
                 emptyMessage="No incomes found"
             >
@@ -53,17 +55,30 @@ function IncomesPage() {
                         <td>{new Date(income.dateReceived).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
                         <td>{income.categoryId ?? '-'}</td>
                         <td>{income.notes ?? '-'}</td>
+                        <td>{income.updatedAt}</td>
+                        <td>
+                            <Button
+                                label="Edit"
+                                variant='secondary'
+                                onClick={() => {
+                                    setSelectedIncome(income)
+                                    setIsModalOpen(true)
+                                }}
+                            />
+                        </td>
                     </tr>
                 ))}
             </Table>
             <Modal
                 isOpen={isModalOpen}
-                title="New Income"
-                onClose={() => setIsModalOpen(false)}
+                title={selectedIncome ? 'Edit Income' : 'New Income'}
+                onClose={() => {
+                    setIsModalOpen(false); setSelectedIncome(null); }}
             >
                 <IncomeForm
                     onSuccess={handleSuccess}
-                    onCancel={() => setIsModalOpen(false)}
+                    onCancel={() => { setIsModalOpen(false); setSelectedIncome(null); }}
+                    income={selectedIncome ?? undefined}
                 />
             </Modal>
         </div>

@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
-import IncomePage from './pages/IncomePage';
+import IncomesPage from './pages/IncomesPage';
 import BudgetsPage from './pages/BudgetsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import ExpensesPage from './pages/ExpensesPage';
 import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
+
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
                     <Route element={<Layout />}>
                         <Route path="/" element={<DashboardPage />} />
                         <Route path="/categories" element={<CategoriesPage />} />
-                        <Route path="/income" element={<IncomePage />} />
+                        <Route path="/income" element={<IncomesPage />} />
                         <Route path="/expenses" element={<ExpensesPage />} />
                         <Route path="/budgets" element={<BudgetsPage />} />
                     </Route>

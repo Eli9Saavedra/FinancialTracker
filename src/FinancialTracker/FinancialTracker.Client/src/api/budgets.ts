@@ -1,8 +1,8 @@
 import { apiFetch } from './client'
 import type { Budget } from '../types'
 
-export function getBudgets(): Promise<Budget[]> {
-    return apiFetch<Budget[]>('/api/budgets');
+export function getBudgets(selectedMonth: number, selectedYear: number): Promise<Budget[]> {
+    return apiFetch<Budget[]>(`/api/budgets?month=${selectedMonth}&year=${selectedYear}`);
 }
 
 export function getBudgetById(id: string): Promise<Budget> {

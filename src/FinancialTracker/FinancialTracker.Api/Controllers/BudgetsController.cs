@@ -20,9 +20,16 @@ namespace FinancialTracker.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BudgetDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<BudgetDto>>> GetAll(
+            [FromQuery] int month,
+            [FromQuery] int year)
         {
-            var budgets = await _budgetService.GetAllAsync();
+            if (month < 1 || month > 12 || year < 1)
+            {
+                return BadRequest("Invalid month or year.");
+            }
+
+            var budgets = await _budgetService.GetAllAsync(month, year);
             return Ok(budgets);
         }
 

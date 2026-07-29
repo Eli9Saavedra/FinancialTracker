@@ -4,7 +4,7 @@ namespace FinancialTracker.Api.Services.Budgets
 {
     public interface IBudgetService
     {
-        Task<IEnumerable<BudgetDto>> GetAllAsync();
+        Task<IEnumerable<BudgetDto>> GetAllAsync(int month, int year);
         Task<BudgetDto?> GetByIdAsync(Guid id);
         Task<BudgetDto> CreateAsync(CreateBudgetRequest request);
         Task<BudgetDto?> UpdateAsync(Guid id, UpdateBudgetRequest request);

@@ -15,12 +15,12 @@ namespace FinancialTracker.Api.Services.Budgets
         }
 
         /// <summary>
-        /// Get every budget from the database, convert each one into a DTO, and return them all as a list
+        /// Get every budget matching the given month and year, convert each one into a DTO, and return them all as a list
         /// </summary>
-        /// <returns></returns>
-        public async Task<IEnumerable<BudgetDto>> GetAllAsync()
+        public async Task<IEnumerable<BudgetDto>> GetAllAsync(int month, int year)
         {
             return await _context.Budgets
+                .Where(budget => budget.Month == month && budget.Year == year)
                 .Select(budget => new BudgetDto
                 {
                     Id = budget.Id,
@@ -38,8 +38,6 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <summary>
         /// Find the budget with this id, convert it into a DTO, and return it. If it doesn't exist, return nothing
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public async Task<BudgetDto?> GetByIdAsync(Guid id)
         {
             return await _context.Budgets
@@ -61,8 +59,6 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <summary>
         /// Take the new budget data, create a database record, save it, and give it back the created budget
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public async Task<BudgetDto> CreateAsync(CreateBudgetRequest request)
         {
             await ValidateCategoryIdAsync(request.CategoryId);
@@ -102,8 +98,6 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <summary>
         /// If the budget exists, delete it and tell me it worked. If it doesn't exist, tell me it failed
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public async Task<bool> DeleteAsync(Guid id)
         {
             var budget = await _context.Budgets.FirstOrDefaultAsync(budget => budget.Id == id);
@@ -122,9 +116,6 @@ namespace FinancialTracker.Api.Services.Budgets
         /// <summary>
         /// Find the budget, replace its values with the new ones, save it, and return the updated result
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public async Task<BudgetDto?> UpdateAsync(Guid id, UpdateBudgetRequest request)
         {
             await ValidateCategoryIdAsync(request.CategoryId);

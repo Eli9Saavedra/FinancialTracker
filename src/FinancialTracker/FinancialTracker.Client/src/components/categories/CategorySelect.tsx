@@ -8,30 +8,33 @@ interface CategorySelectProps {
     value: string;
     onChange: (value: string) => void;
     typeFilter?: number;
+    typeFilters?: number[];
 }
 
-function CategorySelect({ id, label, value, onChange, typeFilter }: CategorySelectProps) {
-
+function CategorySelect({ id, label, value, onChange, typeFilter, typeFilters }: CategorySelectProps) {
     const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
         getCategories().then(data => setCategories(data));
     }, []);
 
-    const filtered = typeFilter !== undefined
-        ? categories.filter(c =>Number(c.type) === typeFilter)
-        : categories;
-  return (
-      <div>
-          <label htmlFor={id}>{label}</label>
-          <select id={id} value={value} onChange={e => onChange(e.target.value)}>
-              <option value="">None</option>
-              {filtered.map(c => (
-                  <option key={c.id} value={c.id} > {c.name}</option>
-              ))}
-          </select>
-      </div>
-  );
+    const filtered = typeFilters && typeFilters.length > 0
+        ? categories.filter(c => typeFilters.includes(Number(c.type)))
+        : typeFilter !== undefined
+            ? categories.filter(c => Number(c.type) === typeFilter)
+            : categories;
+
+    return (
+        <div>
+            <label htmlFor={id}>{label}</label>
+            <select id={id} value={value} onChange={e => onChange(e.target.value)}>
+                <option value="">None</option>
+                {filtered.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+            </select>
+        </div>
+    );
 }
 
 export default CategorySelect;
